@@ -1,6 +1,5 @@
 #include "monty.h"
 /**
- * _div - function div two number
  * @stack: Stack list
  * @line_number: Number of the line
  */
@@ -29,7 +28,6 @@ void _div(stack_t **stack, unsigned int line_number)
 }
 
 /**
- * _mul - multiplies the second top with the top element.
  * @stack: Stack.
  * @line_number: Number of line
  */
@@ -51,8 +49,7 @@ void _mul(stack_t **stack, unsigned int line_number)
 	current->next->n = mul;
 }
 /**
- * _mod - computes the rest of the division of the second top element
- * @stack: Stack.
+ * _mod - computes the rest
  * @line_number: Number of line
  */
 void _mod(stack_t **stack, unsigned int line_number)
@@ -78,7 +75,6 @@ void _mod(stack_t **stack, unsigned int line_number)
 	_pop(stack, line_number);
 }
 /**
- * _pchar - prints the char at the top of the stack, followed by a new line.
  * @stack: Stack.
  * @line_number: Number of line
  */
