@@ -1,7 +1,7 @@
 #include "monty.h"
 
 /**
- * _swap - swaps the top two elements of the stack.
+ * _swap - swaps the top two elements
  * @stack: Stack
  * @line_number: Number of the line
  */
@@ -21,7 +21,7 @@ void _swap(stack_t **stack, unsigned int line_number)
 	current->next->n = temp;
 }
 /**
- * _pop - removes the top element of the stack.
+ * _pop - removes the top element
  * @stack: Stack list
  * @line_number: Number of the line
  */
@@ -66,7 +66,7 @@ void _add(stack_t **stack, unsigned int line_number)
 }
 
 /**
- * _sub - subtracts the top element of the stack from the second.
+ * _sub - subtracts the top element
  * @stack: Stack list
  * @line_number: Number of line
  */
