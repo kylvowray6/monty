@@ -3,82 +3,85 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/types.h>
+#include <errno.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <unistd.h>
 #include <string.h>
 
 /**
- * struct stack_s - Doubly linked list representation of a stack
- * @n: Integer
- * @prev: Points to the previous element of the stack
- * @next: Points to the next element of the stack
+ * struct stack_s - doubly linked list representation of a stack (or queue)
+ * @n: integer
+ * @prev: points to the previous element of the stack (or queue)
+ * @next: points to the next element of the stack (or queue)
+ *
+ * Description: doubly linked list node structure
+ * for stack, queues, LIFO, FIFO Holberton project
  */
 typedef struct stack_s
 {
-    int n;
-    struct stack_s *prev;
-    struct stack_s *next;
+	int n;
+	struct stack_s *prev;
+	struct stack_s *next;
 } stack_t;
 
 /**
- * push - Pushes an element onto the stack.
- * @stack: Double pointer to the stack.
- * @line_number: Line number of the opcode in the Monty byte code file.
+ * struct instruction_s - opcode and its function
+ * @opcode: the opcode
+ * @f: function to handle the opcode
+ *
+ * Description: opcode and its function
+ * for stack, queues, LIFO, FIFO Holberton project
  */
-void push(stack_t **stack, unsigned int line_number);
+typedef struct instruction_s
+{
+	char *opcode;
+	void (*f)(stack_t **stack, unsigned int line_number);
+} instruction_t;
 
 /**
- * pop - Removes the top element of the stack.
- * @stack: Double pointer to the stack.
- * @line_number: Line number of the opcode in the Monty byte code file.
+ * struct glob_s - global and its funcs
+ * @fd: File descriptor
+ * @line: Line to getline
+ *
+ * Description: To handle the file and getline
  */
-void pop(stack_t **stack, unsigned int line_number);
+typedef struct glob_s
+{
+	FILE *fd;
+	char *line;
+} glob_t;
 
-/**
- * swap - Swaps the top two elements of the stack.
- * @stack: Double pointer to the stack.
- * @line_number: Line number of the opcode in the Monty byte code file.
- */
-void swap(stack_t **stack, unsigned int line_number);
+extern glob_t global;
+extern int value;
 
-/**
- * add - Adds the top two elements of the stack.
- * @stack: Double pointer to the stack.
- * @line_number: Line number of the opcode in the Monty byte code file.
- */
-void add(stack_t **stack, unsigned int line_number);
+void handle_command(char *argv);
 
-/**
- * is_numeric - Check if a string is a numeric value.
- * @str: String to check.
- * Return: 1 if numeric, 0 otherwise.
- */
-int is_numeric(const char *str);
+int get_opc(stack_t **stack, char *arg, char *item, int count);
 
-/**
- * pall - Prints all the values on the stack.
- * @stack: Double pointer to the stack.
- * @line_number: Line number of the opcode in the Monty byte code file.
- */
-void pall(stack_t **stack, unsigned int line_number);
+void _push(stack_t **stack, unsigned int line_number);
+void _pall(stack_t **stack, unsigned int line_number);
+void _pint(stack_t **stack, unsigned int line_number);
+void _swap(stack_t **stack, unsigned int line_number);
+void _pop(stack_t **stack, unsigned int line_number);
+void _add(stack_t **stack, unsigned int line_number);
+void _sub(stack_t **stack, unsigned int line_number);
+void _nop(stack_t **stack, unsigned int line_number);
+void _div(stack_t **stack, unsigned int line_number);
+void _mul(stack_t **stack, unsigned int line_number);
+void _mod(stack_t **stack, unsigned int line_number);
+void _pchar(stack_t **stack, unsigned int line_number);
+void _pstr(stack_t **stack, unsigned int line_number);
+void free_dlistint(stack_t *stack);
+void cleanStack(stack_t **stack);
 
-/**
- * pint - Prints the value at the top of the stack.
- * @stack: Double pointer to the stack.
- * @line_number: Line number of the opcode in the Monty byte code file.
- */
-void pint(stack_t **stack, unsigned int line_number);
+/*Help*/
+int _isdigit(char *c);
+stack_t *new_Node(int n);
 
-/**
- * execute_opcode - Executes the appropriate opcode.
- * @stack: Double pointer to the stack.
- * @line: Line containing the opcode from the Monty byte code file.
- * @line_number: Line number in the Monty byte code file.
- */
-void execute_opcode(stack_t **stack, char *line, unsigned int line_number);
-
-/**
- * free_stack - Frees the stack.
- * @stack: Double pointer to the stack.
- */
-void free_stack(stack_t **stack);
+/* handle_errors */
+void push_error(FILE *fd, char *line, stack_t *stack, int count);
+void ins_error(FILE *fd, char *line, stack_t *stack, char *count, int item);
 
 #endif

@@ -1,48 +1,113 @@
-/**
- * main - Entry point for the Monty interpreter.
- * @argc: Number of command-line arguments.
- * @argv: Array of command-line argument strings.
- *
- * Description: The main function reads Monty script from a file, processes
- * Monty opcodes, and executes them. It maintains a stack and performs
- * various stack manipulation operations based on the opcodes in the script.
- *
- * Return: EXIT_SUCCESS on successful execution, EXIT_FAILURE on errors.
- */
 #include "monty.h"
-#include <stdio.h>
-#include <stdlib.h>
 
+glob_t global = {NULL, NULL};
+/**
+ * main - Entry point
+ * @argc: Number of arguments
+ * @argv: Arguments
+ * Return: number of arguments.
+ */
 int main(int argc, char *argv[])
 {
-    FILE *file;
-    stack_t *stack = NULL;
-    char *line = NULL;
-    size_t len = 0;
-    unsigned int line_number = 0;
+	if (argc == 2)
+		handle_command(argv[1]);
+	else
+	{
+		dprintf(STDERR_FILENO, "USAGE: monty file\n");
+		exit(EXIT_FAILURE);
+	}
+	return (0);
+}
+/**
+ * handle_command - Read file
+ * @argv: Arguments
+ * Return: Nothing
+ */
+void handle_command(char *argv)
+{
+	int count = 0, result = 0;
+	size_t bufsize = 0;
+	char *arguments = NULL, *item = NULL;
+	stack_t *stack = NULL;
 
-    if (argc != 2)
-    {
-        fprintf(stderr, "USAGE: monty file\n");
-        return (EXIT_FAILURE);
-    }
+	global.fd = fopen(argv, "r");
+	if (global.fd)
+	{
+		while (getline(&global.line, &bufsize, global.fd) != -1)
+		{
+			count++;
+			arguments = strtok(global.line, " \n\t\r");
+			if (arguments == NULL)
+			{
+				free(arguments);
+				continue;
+			}
+			else if (*arguments == '#')
+				continue;
+			item = strtok(NULL, " \n\t\r");
+			result = get_opc(&stack, arguments, item, count);
+			if (result == 1)
+				push_error(global.fd, global.line, stack, count);
+			else if (result == 2)
+				ins_error(global.fd, global.line, stack, arguments, count);
+		}
+		free(global.line);
+		free_dlistint(stack);
+		fclose(global.fd);
+	}
+	else
+	{
+		dprintf(STDERR_FILENO, "Error: Can't open file %s\n", argv);
+		exit(EXIT_FAILURE);
+	}
+}
+/**
+ * get_opc - function to handle the opcode
+ * @stack: is a stack or queue
+ * @arg: is a parameter
+ * @item: is a parameter
+ * @count: is a line command
+ * Return: nothing
+ */
+int get_opc(stack_t **stack, char *arg, char *item, int count)
+{
+	int i = 0;
 
-    file = fopen(argv[1], "r");
-    if (file == NULL)
-    {
-        fprintf(stderr, "Error: Can't open file %s\n", argv[1]);
-        return (EXIT_FAILURE);
-    }
+	instruction_t op[] = {
+		{"push", _push},
+		{"pall", _pall},
+		{"pint", _pint},
+		{"pop", _pop},
+		{"swap", _swap},
+		{"add", _add},
+		{"sub", _sub},
+		{"nop", _nop},
+		{"div", _div},
+		{"mul", _mul},
+		{"mod", _mod},
+		{"pchar", _pchar},
+		{"pstr", _pstr},
+		{NULL, NULL}
+	};
 
-    while (fgets(line, len, file) != NULL)
-    {
-        line_number++;
-        execute_opcode(&stack, line, line_number);
-    }
+	while (op[i].opcode)
+	{
+		if (!strcmp(arg, op[i].opcode))
+		{
+			if (!strcmp(arg, "push"))
+			{
+				if (_isdigit(item) == 1)
+					value = atoi(item);
+				else
+					return (1);
+			}
+			op[i].f(stack, (unsigned int)count);
+			break;
+		}
+		i++;
+	}
+	if (!op[i].opcode)
+		return (2);
 
-    free_stack(&stack);
-    free(line);
-    fclose(file);
-
-    return (EXIT_SUCCESS);
+	return (0);
 }
