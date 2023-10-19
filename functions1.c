@@ -62,7 +62,7 @@ void _pall(stack_t **stack, unsigned int n)
 }
 
 /**
- * free_dlistint - Free a list.
+ * free_dlistint - Free all list.
  * @stack: Head node.
  * Return: Nothing.
  */
@@ -80,7 +80,7 @@ void free_dlistint(stack_t *stack)
 }
 
 /**
- * _pint - prints the value at the top of the stack.
+ * _pint - prints the value at the top
  * @stack: Stack list
  * @line_number: Number of the line
  */
