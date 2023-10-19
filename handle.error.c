@@ -2,9 +2,6 @@
 
 /**
  * push_error - handle push error
- * @fd: is a file desciptor
- * @line: is a buffer
- * @stack: is a stack or queue
  * @count: is a line command
  */
 void push_error(FILE *fd, char *line, stack_t *stack, int count)
@@ -17,10 +14,8 @@ void push_error(FILE *fd, char *line, stack_t *stack, int count)
 }
 
 /**
- * ins_error - Error handler
- * @fd: is a file descriptor
- * @line: is a buffer
- * @stack: is a stack or queue
+
+ * @stack: is a stack
  * @count: is a line command
  * @item: number
  */
